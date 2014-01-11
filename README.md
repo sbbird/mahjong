@@ -2,16 +2,17 @@ mahjong engine for Shirai-mahjong
 
 usage:
 
-compile:
-./rebar compile
+  compile:
+
+$ ./rebar compile
 
 
-run
+  run:
 
 $ erl -pa ebin
 
-> application:start(mahjong).
+1> application:start(mahjong).
 
-> mahjong_ser:new_game({}).
+2> mahjong_ser:new_game({}).
 
-> mahjong_ser:get_state().
+3> mahjong_ser:get_state().
