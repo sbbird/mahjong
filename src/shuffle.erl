@@ -1,10 +1,10 @@
 %%%-------------------------------------------------------------------
-%%% @author 朱 軼青 <sbbirdzhu@ake-no-MacBook-Pro.local>
-%%% @copyright (C) 2014, 朱 軼青
+%%% @author sbbird.zhu <sbbirdzhu@MacBook-Pro.local>
+%%% @copyright (C) 2014, sbbird.zhu
 %%% @doc
 %%%
 %%% @end
-%%% Created :  1 Jan 2014 by 朱 軼青 <sbbirdzhu@ake-no-MacBook-Pro.local>
+%%% Created :  1 Jan 2014 by sbbird.zhu <sbbirdzhu@MacBook-Pro.local>
 %%%-------------------------------------------------------------------
 -module(shuffle).
 
