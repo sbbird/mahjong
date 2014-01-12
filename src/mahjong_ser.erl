@@ -13,8 +13,8 @@
 %% API
 -export([start_link/0]).
 
--export([print_state/0, 
-	 get_state/0,
+-export([print_info/0, 
+	 get_info/0,
 	 get_player_state/1,
 	 new_game/1,
 	 new_round/0]).
@@ -40,11 +40,11 @@ start_link() ->
     gen_server:start_link({local, ?SERVER}, ?MODULE, [], []).
 
 
-print_state() ->
+print_info() ->
     gen_server:cast(?SERVER, print).
 
-get_state()->
-    gen_server:call(?SERVER, get_state).
+get_info()->
+    gen_server:call(?SERVER, get_info).
 
 new_game({})->
     gen_server:call(?SERVER, new_game).
@@ -79,7 +79,7 @@ init([]) ->
     Player4State = #player_state{player_id=4, kawa=Kawa},
     Yama = #yama{},
     RoundState = #round_state{round=ea, yama=Yama},
-    {ok, #game_state{gameid=1,
+    {ok, #game_info{gameid=1,
 		     round_state=RoundState,
 		     player1=Player1State,
 		     player2=Player2State,
@@ -102,7 +102,7 @@ init([]) ->
 %%                                   {stop, Reason, State}
 %% @end
 %%--------------------------------------------------------------------
-handle_call(get_state, _From, State) ->
+handle_call(get_info, _From, State) ->
     Reply = {ok, State},
     {reply, Reply, State};
 handle_call(new_game, _From, _State) ->    
@@ -113,15 +113,15 @@ handle_call(new_game, _From, _State) ->
     Yama = #yama{yama_list=YamaList, head=13*4},
     
     
-    Player1State = new_player(1, Tehai1),
-    Player2State = new_player(2, Tehai2),
-    Player3State = new_player(3, Tehai3),
-    Player4State = new_player(4, Tehai4),
-   
-
+    Player1State = new_player(1, ?EAST, Tehai1),
+    Player2State = new_player(2, ?SOUTH, Tehai2),
+    Player3State = new_player(3, ?WEST, Tehai3),
+    Player4State = new_player(4, ?NORTH, Tehai4),
+    
+    
 
     RoundState = #round_state{round=e0, yama=Yama},
-    {reply,ok ,#game_state{gameid=1,
+    {reply,ok ,#game_info{gameid=1,
 		     round_state=RoundState,
 		     player1=Player1State,
 		     player2=Player2State,
@@ -131,16 +131,16 @@ handle_call(new_game, _From, _State) ->
 		    }
     };
 handle_call({get_player_state, 1}, _From, State) -> 
-    Reply = {ok, State#game_state.player1},
+    Reply = {ok, State#game_info.player1},
     {reply, Reply, State};
 handle_call({get_player_state, 2}, _From, State) -> 
-    Reply = {ok, State#game_state.player2},
+    Reply = {ok, State#game_info.player2},
     {reply, Reply, State};
 handle_call({get_player_state, 3}, _From, State) -> 
-    Reply = {ok, State#game_state.player3},
+    Reply = {ok, State#game_info.player3},
     {reply, Reply, State};
 handle_call({get_player_state, 4}, _From, State) -> 
-    Reply = {ok, State#game_state.player4},
+    Reply = {ok, State#game_info.player4},
     {reply, Reply, State};
 handle_call(new_round,  _From, State) ->
     {reply, do_nothing, State}.
@@ -206,7 +206,7 @@ shuffle(L) ->
 %    List1 = [{random:uniform(), X} || X <- L],
 %    List2 = lists:keysort(1, List1),
 %        [E || {_, E} <- List2]. 
-    [X||{_,X} <- lists:sort([ {random:uniform(), N} || N <- L])].
+   [X||{_,X} <- lists:sort([ {random:uniform(), N} || N <- L])].
 haipai(L) ->
     {List1, _Rest} = lists:split(13, L), 
     {List2, _Rest1} = lists:split(13, _Rest),
@@ -215,7 +215,7 @@ haipai(L) ->
     {List1, List2, List3, List4}.
     
 
-new_player(ID, Tehai) ->
+new_player(ID, Pos, Tehai) ->
     Kawa = #kawa{},
     SortedTehai = lists:sort(Tehai),
-    #player_state{player_id=ID, kawa=Kawa, tehai=SortedTehai}.
+    #player_state{player_id=ID, position=Pos, kawa=Kawa, tehai=SortedTehai}.

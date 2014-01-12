@@ -21,6 +21,12 @@
  16#31,16#32,16#33,16#34,16#35,16#36,16#37,  
  16#31,16#32,16#33,16#34,16#35,16#36,16#37]).
 
+-define(EAST, 0).
+-define(SOUTH, 1).
+-define(WEST, 2).
+-define(NORTH, 3).
+
+
 -record(furo, {furo_type, player_atom, furo_hai1, furo_hai2}).
 -record(kawa, {kawa_hai=[], suteru_index=[]}).
 -record(player_state, {player_id, position=0, point=25000, tehai = [], kawa, furos=[], tsumo=null}).
@@ -32,7 +38,7 @@
 		      state=0,
 		      yama}).
 
--record(game_state, {gameid,
+-record(game_info, {gameid,
 		     round_state,
 		     player1,
 		     player2,
