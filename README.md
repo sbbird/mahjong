@@ -15,4 +15,4 @@ $ erl -pa ebin
 
 2> mahjong_ser:new_game({}).
 
-3> mahjong_ser:get_state().
+3> mahjong_ser:get_info().
