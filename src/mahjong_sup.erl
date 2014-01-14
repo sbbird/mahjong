@@ -11,7 +11,7 @@
 -behaviour(supervisor).
 
 %% API
--export([start_link/0]).
+-export([start_link/4]).
 
 %% Supervisor callbacks
 -export([init/1]).
@@ -29,8 +29,8 @@
 %% @spec start_link() -> {ok, Pid} | ignore | {error, Error}
 %% @end
 %%--------------------------------------------------------------------
-start_link() ->
-    supervisor:start_link({local, ?SERVER}, ?MODULE, []).
+start_link(_Sock1, _Sock2, _Sock3, _Sock4) ->
+    supervisor:start_link({local, ?SERVER}, ?MODULE, [_Sock1, _Sock2, _Sock3, _Sock4]).
 
 %%%===================================================================
 %%% Supervisor callbacks
@@ -49,7 +49,7 @@ start_link() ->
 %%                     {error, Reason}
 %% @end
 %%--------------------------------------------------------------------
-init([]) ->
+init([_Sock1, _Sock2, _Sock3, _Sock4]) ->
     RestartStrategy = one_for_one,
     MaxRestarts = 1000,
     MaxSecondsBetweenRestarts = 3600,
@@ -60,7 +60,7 @@ init([]) ->
     Shutdown = 2000,
     Type = worker,
 
-    AChild = {mahjong_ser, {mahjong_ser, start_link, []},
+    AChild = {mahjong_ser, {mahjong_ser, start_link, [_Sock1, _Sock2, _Sock3, _Sock4]},
 	      Restart, Shutdown, Type, [mahjong_ser]},
 
     {ok, {SupFlags, [AChild]}}.
