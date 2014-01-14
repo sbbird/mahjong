@@ -11,7 +11,7 @@
 -behaviour(gen_server).
 
 %% API
--export([start_link/0]).
+-export([start_link/4]).
 
 -export([print_info/0, 
 	 get_info/0,
@@ -36,8 +36,8 @@
 %% @spec start_link() -> {ok, Pid} | ignore | {error, Error}
 %% @end
 %%--------------------------------------------------------------------
-start_link() ->
-    gen_server:start_link({local, ?SERVER}, ?MODULE, [], []).
+start_link(_Sock1, _Sock2, _Sock3, _Sock4) ->
+    gen_server:start_link({local, ?SERVER}, ?MODULE, [_Sock1, _Sock2, _Sock3, _Sock4], []).
 
 
 print_info() ->
@@ -70,7 +70,8 @@ get_player_state(ID)->
 %%                     {stop, Reason}
 %% @end
 %%--------------------------------------------------------------------
-init([]) ->
+init([_Sock1, _Sock2, _Sock3, _Sock4]) ->
+    io:format("here mahjong_sup, ~p ~p ~p ~p~n", [_Sock1, _Sock2, _Sock3, _Sock4]),
     Kawa = #kawa{},
 
     Player1State = #player_state{player_id=1, kawa=Kawa},
@@ -112,13 +113,10 @@ handle_call(new_game, _From, _State) ->
     {Tehai1, Tehai2, Tehai3, Tehai4} = haipai(YamaList),
     Yama = #yama{yama_list=YamaList, head=13*4},
     
-    
     Player1State = new_player(1, ?EAST, Tehai1),
     Player2State = new_player(2, ?SOUTH, Tehai2),
     Player3State = new_player(3, ?WEST, Tehai3),
     Player4State = new_player(4, ?NORTH, Tehai4),
-    
-    
 
     RoundState = #round_state{round=e0, yama=Yama},
     {reply,ok ,#game_info{gameid=1,
@@ -206,7 +204,7 @@ shuffle(L) ->
 %    List1 = [{random:uniform(), X} || X <- L],
 %    List2 = lists:keysort(1, List1),
 %        [E || {_, E} <- List2]. 
-   [X||{_,X} <- lists:sort([ {random:uniform(), N} || N <- L])].
+    [X||{_,X} <- lists:sort([ {random:uniform(), N} || N <- L])].
 haipai(L) ->
     {List1, _Rest} = lists:split(13, L), 
     {List2, _Rest1} = lists:split(13, _Rest),
